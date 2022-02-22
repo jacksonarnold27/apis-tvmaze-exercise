@@ -61,6 +61,7 @@ function populateShows(shows) {
            <div class="card-body">
              <h5 class="card-title">${show.name}</h5>
              <p class="card-text">${show.summary}</p>
+             <button class=btn btn-info" type="button">Episodes</button>
            </div>
          </div>
        </div>
@@ -103,6 +104,7 @@ $("#search-form").on("submit", async function handleSearch(evt) {
 });
 
 
+
 /** Given a show ID, return list of episodes:
  *      { id, name, season, number }
  */
@@ -126,3 +128,16 @@ async function getEpisodes(id) {
   });
   return episodes;
 }
+
+
+/**handle episode buttons */
+$(function () {
+  $("#shows-list").on("click", "button", async function (evt) {
+    let show_id = $(evt.target).closest('.card').data('showId');
+    console.log(show_id);
+    let episodes = await getEpisodes(show_id);
+    console.log(episodes);
+    populateEpisodes(episodes);
+  });
+});
+
