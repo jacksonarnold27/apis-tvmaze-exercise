@@ -1,5 +1,7 @@
-const SHOWS_API = "http://api.tvmaze.com/search/shows?q=";
-const DEFAULT_IMG = "https://tinyurl.com/tv-missing"
+
+
+const SHOWS_API = "http://api.tvmaze.com/search/shows/?q=";
+const DEFAULT_IMG = "https://tinyurl.com/tv-missing";
 
 
 
@@ -69,6 +71,19 @@ function populateShows(shows) {
 }
 
 
+/** Populate episodes list */
+function populateEpisodes(episodes) {
+  const $episodesList = $('#episodes-list');
+  $episodesList.empty();
+
+  for (let episode of episodes) {
+    let newLi = $(`<li>"${episode.name}" (Season ${episode.season}, Episode ${episode.number})</li>`);
+    $episodesList.append(newLi);
+  };
+  $('#episodes-area').show();
+};
+
+
 /** Handle search form submission:
  *    - hide episodes area
  *    - get list of matching shows and show in shows list
@@ -93,9 +108,21 @@ $("#search-form").on("submit", async function handleSearch(evt) {
  */
 
 async function getEpisodes(id) {
-  // TODO: get episodes from tvmaze
   //       you can get this by making GET request to
   //       http://api.tvmaze.com/shows/SHOW-ID-HERE/episodes
+  const api_url = `http://api.tvmaze.com/shows/${id}/episodes`;
 
-  // TODO: return array-of-episode-info, as described in docstring above
+  const response = await axios.get(api_url);
+  const data = response.data;
+
+
+  let episodes = data.map((episode) => {
+    return {
+      id: episode.id,
+      name: episode.name,
+      season: episode.season,
+      number: episode.number
+    };
+  });
+  return episodes;
 }
