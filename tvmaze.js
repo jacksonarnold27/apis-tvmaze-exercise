@@ -1,11 +1,12 @@
+const SHOWS_API = "http://api.tvmaze.com/search/shows?q=";
+const DEFAULT_IMG = "https://tinyurl.com/tv-missing"
+
+
+
 
 /** Given a query string, return array of matching shows:
  *     { id, name, summary, episodesUrl }
  */
-
-
-
-
 /** Search Shows
  *    - given a search term, search for tv shows that
  *      match that query.  The function is async show it
@@ -22,12 +23,14 @@
  */
 async function searchShows(query) {
   let shows = [];
-  const api_url = "http://api.tvmaze.com/search/shows?q=" + query;
+  const api_url = SHOWS_API + query;
   const response = await axios.get(api_url);
   const data = response.data;
 
   shows = data.map((value) => {
     let show = value.show;
+    if (!!show.image) { show.image = show.image.original; }
+    else { show.image = DEFAULT_IMG; };
     return {
       id: show.id,
       name: show.name,
